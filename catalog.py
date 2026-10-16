@@ -38,4 +38,7 @@ def load_stations(path: Path) -> dict[str, Station]:
         stations[identifier] = station
     if len(stations) > 25:
         raise ValueError("O menu suporta até 25 estações ativas.")
-    return dict(sorted(stations.items(), key=lambda item: unicodedata.normalize("NFKD", item[1].name).casefold()))
+    def alphabetical(item):
+        return "".join(char for char in unicodedata.normalize("NFKD", item[1].name).casefold()
+                       if not unicodedata.combining(char))
+    return dict(sorted(stations.items(), key=alphabetical))

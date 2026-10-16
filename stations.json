@@ -9,6 +9,23 @@
     "radio_browser_uuid": "65908a60-3a4c-4d8c-b66c-d8eb96faefc6"
   },
   {
+    "id": "98-fm-rio",
+    "name": "98 FM Rio",
+    "category": "Música, flashbacks e entretenimento · Rio",
+    "url": "https://sv11.hdradios.net:7674/stream",
+    "website": "https://98fmrio.com/",
+    "enabled": true
+  },
+  {
+    "id": "bandnews-rio",
+    "name": "BandNews FM · Rio de Janeiro",
+    "category": "Notícias · Rio de Janeiro · português",
+    "url": "https://playerservices.streamtheworld.com/api/livestream-redirect/BANDNEWSFM_RJAAC.aac?",
+    "website": "https://www.band.com.br/bandnews-fm-rj",
+    "enabled": true,
+    "radio_browser_uuid": "9c16f0b1-7764-4264-8d33-68f3566c68ef"
+  },
+  {
     "id": "bbc",
     "name": "BBC World Service",
     "category": "Notícias internacionais · inglês",
@@ -26,8 +43,17 @@
     "radio_browser_uuid": "52994d67-31ea-448f-b6bc-7eaeb6a3504b"
   },
   {
+    "id": "cnn-international",
+    "name": "CNN International",
+    "category": "Notícias internacionais · inglês",
+    "url": "https://tunein.cdnstream1.com/3519_96.aac",
+    "website": "https://edition.cnn.com/audio",
+    "enabled": true,
+    "radio_browser_uuid": "d74c4cd0-5e3a-4ee4-b298-e681347db9f6"
+  },
+  {
     "id": "jbfm",
-    "name": "JB FM",
+    "name": "JB FM · 99,9 Rio",
     "category": "Música · Rio de Janeiro",
     "url": "https://playerservices.streamtheworld.com/api/livestream-redirect/JBFMAAC.aac",
     "website": "https://jb.fm/",
@@ -59,6 +85,15 @@
     "website": "https://www.npr.org/about-npr/472557877/npr-program-stream",
     "enabled": true,
     "radio_browser_uuid": "14543b1e-44bf-4151-ae89-ec23b6eb711f"
+  },
+  {
+    "id": "radio-cidade",
+    "name": "Rádio Cidade · Rio de Janeiro",
+    "category": "Rock nacional e internacional · Rio",
+    "url": "https://playerservices.streamtheworld.com/api/livestream-redirect/RADIOCIDADEAAC.aac",
+    "website": "https://radiocidade.fm/",
+    "enabled": true,
+    "radio_browser_uuid": "c9083bcc-87a2-4703-b0c0-d73d74f3e2a8"
   },
   {
     "id": "paradise-rock",
@@ -95,5 +130,14 @@
     "website": "https://somafm.com/groovesalad/",
     "enabled": true,
     "radio_browser_uuid": "84bcd49b-3f3e-11e8-b74d-52543be04c81"
+  },
+  {
+    "id": "tmc-transamerica",
+    "name": "TMC · antiga Transamérica · São Paulo",
+    "category": "Notícias e esportes · português",
+    "url": "https://playerservices.streamtheworld.com/api/livestream-redirect/RT_SPAAC.aac",
+    "website": "https://tmc.com.br/",
+    "enabled": true,
+    "radio_browser_uuid": "9cc39d6a-ee85-4b81-95bf-92b6141670c8"
   }
 ]

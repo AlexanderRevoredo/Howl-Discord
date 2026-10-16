@@ -44,7 +44,7 @@ Entre em um canal de voz comum e use `/radio`.
 
 ## Estações
 
-O menu contém onze rádios ativas, em ordem alfabética. Entre na call, execute `/radio` e selecione uma estação. Use Parar ou Desconectar para encerrar. O botão Retomar inicia novamente a última rádio tocada nesse servidor, inclusive após desconectar. Como é rádio ao vivo, volta ao conteúdo atual da transmissão, sem recuperar o trecho perdido.
+O menu contém dezesseis rádios ativas em uma lista única, em ordem alfabética, sem filtros por categoria. Entre na call, execute `/radio` e selecione uma estação. Use Parar ou Desconectar para encerrar. O botão Retomar inicia novamente a última rádio tocada nesse servidor, inclusive após desconectar. Como é rádio ao vivo, volta ao conteúdo atual da transmissão, sem recuperar o trecho perdido.
 
 Os novos painéis não expiram em 10 minutos e são registrados como views persistentes ao iniciar o bot. A memória da última estação é mantida durante a execução; após reiniciar o processo, selecione uma estação uma vez para habilitar novamente a retomada. Painéis antigos, criados antes da inclusão desse botão, precisam ser substituídos usando `/radio`.
 
@@ -55,6 +55,10 @@ O pacote `imageio-ffmpeg` fornece um executável de FFmpeg caso não haja um no 
 Também inclui SomaFM Groove Salad, 89 FM A Rádio Rock, REYFM #LOFI e Radio Record. Seus links foram obtidos no Radio Browser, com `lastcheckok=1`, e testados localmente. Os UUIDs ficam em `radio_browser_uuid`. Esse estado é o último teste do diretório, não uma garantia de disponibilidade atual. Não indica licença de retransmissão, mesmo para emissoras sem anúncios.
 
 Jovem Pan FM · Belo Horizonte, NPR · Program Stream e KEXP · Seattle também foram localizadas no Radio Browser e passaram por cinco segundos de teste em tempo real, sem esvaziar o buffer. A opção Jovem Pan usa a afiliada FM de BH, com música e entretenimento. A NPR usa seu stream de programas 24 horas; a KEXP oferece música alternativa e locução em inglês.
+
+BandNews FM · Rio de Janeiro, Rádio Cidade · Rio de Janeiro e TMC · antiga Transamérica · São Paulo foram adicionadas em 16/10/2026, com links do Radio Browser e cinco segundos de teste em tempo real sem esvaziar o buffer. A TMC usa o stream de São Paulo identificado no diretório; a mudança de Transamérica para TMC e a proposta de notícias/esportes estão descritas no [site da rede](https://tmc.com.br/institucional/conheca-a-programacao-da-tmc/). A 99,9 do Rio aparece como JB FM · 99,9 Rio, sem duplicação da emissora.
+
+A 98 FM Rio e a CNN International integram o catálogo para a instalação privada solicitada pelo responsável pelo projeto. A 98 FM Rio usa o endereço publicado no seu player oficial, por não ter sido encontrada no Radio Browser; a CNN International usa o registro do diretório e transmite em inglês. Ambas passaram no teste técnico. Isso não constitui autorização de retransmissão: a [política da 98 FM Rio](https://98fmrio.com/direitos-autorais-conteudos-musicais-licenciados/) destina a programação aos canais oficiais e alerta sobre retransmissão sem autorização. Não foi confirmada uma licença de retransmissão da CNN International. Um bot privado não elimina essas pendências. O mesmo cuidado vale para as demais estações: constar no Radio Browser ou ter um stream público não concede licença para retransmitir no Discord. Publicar o código e operar um serviço que retransmite áudio são atividades distintas.
 
 Ao selecionar uma estação, o Howl usa o endereço em cache e prepara aproximadamente 2 segundos de áudio antes de trocar a fonte no mesmo player. A rádio anterior continua tocando durante essa preparação; se a nova falhar, a anterior é mantida. Uma nova seleção cancela a preparação antiga, e Parar impede que uma seleção pendente inicie mais tarde. Na primeira seleção, o bot só entra na call depois de preparar o áudio.
 
