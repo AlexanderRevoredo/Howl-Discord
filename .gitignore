@@ -1,0 +1,13 @@
+.env
+.venv/
+__pycache__/
+*.py[cod]
+*.log
+assets/demo.wav
+radio_browser_candidates.json
+groove_candidates.json
+lofi_candidates.json
+pan_candidates.json
+npr_candidates.json
+kexp_candidates.json
+rock_candidates.json

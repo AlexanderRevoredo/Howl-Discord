@@ -1,0 +1,99 @@
+[
+  {
+    "id": "89-rock",
+    "name": "89 FM A Rádio Rock",
+    "category": "Rock · São Paulo",
+    "url": "https://playerservices.streamtheworld.com/api/livestream-redirect/RADIO_89FM_ADP.aac?dist=site-89fm",
+    "website": "https://www.radiorock.com.br/",
+    "enabled": true,
+    "radio_browser_uuid": "65908a60-3a4c-4d8c-b66c-d8eb96faefc6"
+  },
+  {
+    "id": "bbc",
+    "name": "BBC World Service",
+    "category": "Notícias internacionais · inglês",
+    "url": "https://stream.live.vc.bbcmedia.co.uk/bbc_world_service",
+    "website": "https://www.bbc.com/audio",
+    "enabled": true
+  },
+  {
+    "id": "cbn",
+    "name": "CBN São Paulo",
+    "category": "Notícias nacionais · português",
+    "url": "https://playerservices.streamtheworld.com/api/livestream-redirect/CBN_SPAAC.aac",
+    "website": "https://cbn.globo.com/",
+    "enabled": true,
+    "radio_browser_uuid": "52994d67-31ea-448f-b6bc-7eaeb6a3504b"
+  },
+  {
+    "id": "jbfm",
+    "name": "JB FM",
+    "category": "Música · Rio de Janeiro",
+    "url": "https://playerservices.streamtheworld.com/api/livestream-redirect/JBFMAAC.aac",
+    "website": "https://jb.fm/",
+    "enabled": true
+  },
+  {
+    "id": "jovem-pan-fm",
+    "name": "Jovem Pan FM · Belo Horizonte",
+    "category": "Música e entretenimento · português",
+    "url": "https://8062.brasilstream.com.br/stream?origem=task_site",
+    "website": "https://jovempan.com.br/afiliada/bh-fm",
+    "enabled": true,
+    "radio_browser_uuid": "d4f0f5ca-b0a5-4de4-be3b-e686920d94b0"
+  },
+  {
+    "id": "kexp",
+    "name": "KEXP · Seattle",
+    "category": "Música alternativa e locução · inglês americano",
+    "url": "https://kexp-mp3-128.streamguys1.com/kexp128.mp3",
+    "website": "https://www.kexp.org/",
+    "enabled": true,
+    "radio_browser_uuid": "e9fddd49-3ee2-4597-8574-1b7dbd00aac0"
+  },
+  {
+    "id": "npr",
+    "name": "NPR · Program Stream",
+    "category": "Notícias e programas · inglês americano",
+    "url": "http://npr-ice.streamguys1.com/live.aac",
+    "website": "https://www.npr.org/about-npr/472557877/npr-program-stream",
+    "enabled": true,
+    "radio_browser_uuid": "14543b1e-44bf-4151-ae89-ec23b6eb711f"
+  },
+  {
+    "id": "paradise-rock",
+    "name": "Radio Paradise · Rock",
+    "category": "Rock internacional",
+    "url": "https://stream.radioparadise.com/rock-64",
+    "website": "https://radioparadise.com/",
+    "enabled": true,
+    "radio_browser_uuid": "9e54d6fc-16a6-4308-9c15-c60aeb1e2de8"
+  },
+  {
+    "id": "radio-record",
+    "name": "Radio Record",
+    "category": "Eletrônica e dance · russo",
+    "url": "https://radiorecord.hostingradio.ru/rr_main96.aacp",
+    "website": "https://www.radiorecord.ru/",
+    "enabled": true,
+    "radio_browser_uuid": "9e4f0920-a3bd-4884-9e98-fbd0051215ed"
+  },
+  {
+    "id": "reyfm-lofi",
+    "name": "REYFM #LOFI",
+    "category": "Lo-fi · estudar e relaxar",
+    "url": "https://listen.reyfm.de/lofi_64kbps.mp3",
+    "website": "https://www.reyfm.de/",
+    "enabled": true,
+    "radio_browser_uuid": "56b9be45-1211-4286-815d-56c3fec0ad8d"
+  },
+  {
+    "id": "groove-salad",
+    "name": "SomaFM Groove Salad",
+    "category": "Estudar · eletrônica ambiente",
+    "url": "https://ice2.somafm.com/groovesalad-64-aac",
+    "website": "https://somafm.com/groovesalad/",
+    "enabled": true,
+    "radio_browser_uuid": "84bcd49b-3f3e-11e8-b74d-52543be04c81"
+  }
+]
