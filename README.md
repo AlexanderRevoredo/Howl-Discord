@@ -2,87 +2,110 @@
 
 # Howl
 
-Bot de rádios ao vivo para Discord, escrito em Python com discord.py e FFmpeg.
+Rádios ao vivo no Discord. Entre em um canal de voz, use `/radio` e escolha uma estação para ouvir com seus amigos.
 
-## Recursos
+Projeto pessoal de portfólio, sem fins lucrativos, desenvolvido em **Python com discord.py e FFmpeg**. A instalação mantida pelo autor é utilizada apenas em servidores privados. Este repositório apresenta a implementação; não oferece um serviço público de retransmissão nem um convite público para o bot.
 
-- `/radio`: painel com seletor de até 25 estações, Retomar, Parar e Desconectar.
-- Retomar volta à última rádio tocada no servidor, sem precisar selecionar novamente.
-- `/tocando`: consulta a estação atual.
-- Reprodução independente por servidor e operações de voz serializadas.
-- Controles disponíveis aos membros no mesmo canal de voz do bot.
+## Funcionalidades
+
+- `/radio`: painel com uma lista de estações em ordem alfabética, sem filtros por categoria.
+- **Retomar**: volta à última rádio tocada no servidor, inclusive após desconectar.
+- **Parar**: encerra a reprodução e cancela carregamentos pendentes.
+- **Desconectar**: retira o Howl do canal de voz.
+- `/tocando`: informa a estação atual.
+- A rádio anterior continua tocando enquanto a próxima é preparada; se o carregamento falhar, a fonte anterior é mantida.
+- Uma nova seleção substitui a solicitação de carregamento anterior.
+- Controles restritos aos membros no mesmo canal de voz do bot.
 - Desconexão automática quando não restam pessoas no canal.
-- Reconexão de stream pelo FFmpeg; não há garantia de recuperação de todas as falhas.
-- Menu em ordem alfabética, sem estação de demonstração.
-- Buffer inicial de 2 segundos com fila limitada a 6 segundos de áudio e recomposição após oscilações.
-- Troca de fonte no mesmo player: mantém a rádio anterior enquanto a próxima carrega.
-- Última seleção tem prioridade; Parar cancela carregamentos pendentes.
-- Links atualizados em segundo plano no Radio Browser, com cache e fallback para a URL salva.
+- Reprodução independente em servidores diferentes.
+- Painéis persistentes, sem expiração de 10 minutos.
 - Não exige acesso ao conteúdo das mensagens.
+
+**Retomar acompanha o momento atual da transmissão ao vivo.** Não recupera o trecho perdido. A última estação fica na memória durante a execução; após reiniciar o processo, é necessário selecionar uma estação novamente.
+
+Uma conta de bot pode ocupar apenas um canal de voz por servidor. Para tocar em duas calls do mesmo servidor simultaneamente, seriam necessárias duas contas de bot distintas.
+
+## Tecnologias e funcionamento
+
+| Componente | Responsabilidade |
+| --- | --- |
+| Python e asyncio | Comandos, tarefas assíncronas e coordenação por servidor |
+| discord.py com suporte a voz | Integração com Discord, painel e envio de áudio |
+| FFmpeg | Recepção dos streams e conversão para Opus |
+| Radio Browser | Atualização de endereços para estações com UUID cadastrado |
+| python-dotenv | Configuração local por variáveis de ambiente |
+
+O áudio passa por um buffer inicial de aproximadamente 2 segundos, com fila limitada a 6 segundos. A próxima estação é preparada em segundo plano e substitui a fonte no mesmo player somente quando há áudio pronto. Encerrar processos de áudio acontece fora do loop de eventos do Discord.
+
+Para as estações com UUID do Radio Browser, os links são atualizados em segundo plano, com cache de 30 minutos e fallback para o endereço salvo. As demais usam a URL configurada em `stations.json`. A 98 FM Rio usa o endereço publicado no player oficial, pois não foi encontrada no diretório.
+
+O FFmpeg tenta recuperar falhas temporárias de conexão. Se o buffer esvaziar, o player envia silêncio enquanto recompõe a fila. Isso reduz o impacto de oscilações curtas, mas não garante continuidade quando a própria rádio, a internet ou a conexão de voz falham.
 
 ## Executar no Windows
 
-Requer Python 3.11 ou superior e FFmpeg instalado, disponível no PATH (ou caminho completo em `FFMPEG_PATH`).
+Requer **Python 3.11 ou superior**, uma aplicação de bot no Discord e conexão à internet. O pacote `imageio-ffmpeg`, incluído nas dependências, fornece um executável de FFmpeg caso não haja um disponível no PATH. Uma instalação separada é opcional.
+
+Na pasta do projeto:
 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
+```
+
+Na primeira configuração, crie o arquivo `.env` a partir do exemplo. Se já existir, edite o arquivo atual:
+
+```powershell
 Copy-Item .env.example .env
 ```
 
-1. Crie uma aplicação e seu bot no [Discord Developer Portal](https://discord.com/developers/applications).
-2. Coloque o token em `DISCORD_TOKEN` no `.env`. Nunca publique esse arquivo ou o token.
-3. Os comandos são registrados globalmente. `DISCORD_GUILD_ID` não é mais usado; pode ser removido de configurações antigas. Após sincronizar os globais, o Howl remove as cópias de teste de `/radio` e `/tocando` dos servidores conectados. O Discord pode precisar ser recarregado para atualizar as sugestões.
-4. Gere um convite com os escopos `bot` e `applications.commands`, com as permissões Ver canais, Enviar mensagens, Inserir links, Conectar e Falar. Não precisa de Administrador nem de Message Content Intent.
-5. Configure pelo menos uma estação e execute:
+Preencha o token localmente:
+
+```env
+DISCORD_TOKEN=seu_token_do_bot
+FFMPEG_PATH=ffmpeg
+```
+
+1. Crie a aplicação e o bot no [Discord Developer Portal](https://discord.com/developers/applications).
+2. No convite, selecione os escopos `bot` e `applications.commands` e as permissões **Ver canais, Enviar mensagens, Inserir links, Conectar e Falar**. Administrador e Message Content Intent não são necessários.
+3. Adicione o bot ao servidor privado em que será usado.
+4. Inicie o processo:
 
 ```powershell
 .\.venv\Scripts\python.exe bot.py
 ```
 
-Entre em um canal de voz comum e use `/radio`.
+Mantenha o processo em execução. Para reiniciar, pressione **Ctrl+C** e execute o comando novamente. Não publique o token nem o arquivo `.env`; ele está incluído no `.gitignore`.
 
-## Estações
+Os comandos são registrados globalmente e podem levar algum tempo para aparecer no Discord. `DISCORD_GUILD_ID` não é mais usado. Depois de sincronizar os globais, o Howl remove as cópias antigas de teste dos seus comandos nos servidores conectados, evitando sugestões duplicadas.
 
-O menu contém dezesseis rádios ativas em uma lista única, em ordem alfabética, sem filtros por categoria. Entre na call, execute `/radio` e selecione uma estação. Use Parar ou Desconectar para encerrar. O botão Retomar inicia novamente a última rádio tocada nesse servidor, inclusive após desconectar. Como é rádio ao vivo, volta ao conteúdo atual da transmissão, sem recuperar o trecho perdido.
+Se quiser usar outro FFmpeg, defina o caminho completo em `FFMPEG_PATH`.
 
-Os novos painéis não expiram em 10 minutos e são registrados como views persistentes ao iniciar o bot. A memória da última estação é mantida durante a execução; após reiniciar o processo, selecione uma estação uma vez para habilitar novamente a retomada. Painéis antigos, criados antes da inclusão desse botão, precisam ser substituídos usando `/radio`.
+## Estações configuradas
 
-O pacote `imageio-ffmpeg` fornece um executável de FFmpeg caso não haja um no PATH. `FFMPEG_PATH` continua permitindo escolher outro executável. Não é necessário instalar FFmpeg separadamente para o teste com as dependências completas.
+O catálogo atual contém 16 estações. Os perfis abaixo descrevem as opções do menu; a programação pode variar por horário.
 
-`stations.json` inclui JB FM, CBN São Paulo e BBC World Service ativas. Seus streams públicos passaram por um teste curto de decodificação com FFmpeg em 15/10/2026. Disponibilidade e endereços podem mudar. Esse teste técnico não confirma autorização de retransmissão; essa autorização continua pendente para publicação do serviço.
+| Estação | Perfil |
+| --- | --- |
+| 89 FM A Rádio Rock | Rock · São Paulo |
+| 98 FM Rio | Música, flashbacks e entretenimento · Rio |
+| BandNews FM · Rio de Janeiro | Notícias em português |
+| BBC World Service | Notícias internacionais em inglês |
+| CBN São Paulo | Notícias em português |
+| CNN International | Notícias internacionais em inglês |
+| JB FM · 99,9 Rio | Música brasileira e internacional |
+| Jovem Pan FM · Belo Horizonte | Música e entretenimento |
+| KEXP · Seattle | Música alternativa e locução em inglês |
+| NPR · Program Stream | Notícias e programas em inglês |
+| Rádio Cidade · Rio de Janeiro | Rock nacional e internacional |
+| Radio Paradise · Rock | Rock internacional |
+| Radio Record | Eletrônica e dance · russo |
+| REYFM #LOFI | Lo-fi para estudar e relaxar |
+| SomaFM Groove Salad | Eletrônica ambiente |
+| TMC · antiga Transamérica · São Paulo | Notícias e esportes |
 
-Também inclui SomaFM Groove Salad, 89 FM A Rádio Rock, REYFM #LOFI e Radio Record. Seus links foram obtidos no Radio Browser, com `lastcheckok=1`, e testados localmente. Os UUIDs ficam em `radio_browser_uuid`. Esse estado é o último teste do diretório, não uma garantia de disponibilidade atual. Não indica licença de retransmissão, mesmo para emissoras sem anúncios.
+Os endereços ficam em [stations.json](stations.json). Links e disponibilidade podem mudar. Os testes de áudio realizados no desenvolvimento confirmam apenas funcionamento técnico, não autorização de retransmissão. Consulte [Uso e direitos](#uso-e-direitos).
 
-Jovem Pan FM · Belo Horizonte, NPR · Program Stream e KEXP · Seattle também foram localizadas no Radio Browser e passaram por cinco segundos de teste em tempo real, sem esvaziar o buffer. A opção Jovem Pan usa a afiliada FM de BH, com música e entretenimento. A NPR usa seu stream de programas 24 horas; a KEXP oferece música alternativa e locução em inglês.
-
-BandNews FM · Rio de Janeiro, Rádio Cidade · Rio de Janeiro e TMC · antiga Transamérica · São Paulo foram adicionadas em 16/10/2026, com links do Radio Browser e cinco segundos de teste em tempo real sem esvaziar o buffer. A TMC usa o stream de São Paulo identificado no diretório; a mudança de Transamérica para TMC e a proposta de notícias/esportes estão descritas no [site da rede](https://tmc.com.br/institucional/conheca-a-programacao-da-tmc/). A 99,9 do Rio aparece como JB FM · 99,9 Rio, sem duplicação da emissora.
-
-A 98 FM Rio e a CNN International integram o catálogo para a instalação privada solicitada pelo responsável pelo projeto. A 98 FM Rio usa o endereço publicado no seu player oficial, por não ter sido encontrada no Radio Browser; a CNN International usa o registro do diretório e transmite em inglês. Ambas passaram no teste técnico. Isso não constitui autorização de retransmissão: a [política da 98 FM Rio](https://98fmrio.com/direitos-autorais-conteudos-musicais-licenciados/) destina a programação aos canais oficiais e alerta sobre retransmissão sem autorização. Não foi confirmada uma licença de retransmissão da CNN International. Um bot privado não elimina essas pendências. O mesmo cuidado vale para as demais estações: constar no Radio Browser ou ter um stream público não concede licença para retransmitir no Discord. Publicar o código e operar um serviço que retransmite áudio são atividades distintas.
-
-Ao selecionar uma estação, o Howl usa o endereço em cache e prepara aproximadamente 2 segundos de áudio antes de trocar a fonte no mesmo player. A rádio anterior continua tocando durante essa preparação; se a nova falhar, a anterior é mantida. Uma nova seleção cancela a preparação antiga, e Parar impede que uma seleção pendente inicie mais tarde. Na primeira seleção, o bot só entra na call depois de preparar o áudio.
-
-A atualização de links acontece em segundo plano, com cache de 30 minutos e limite de 2,5 segundos por consulta. Se um endereço falhar, o bot tenta uma atualização e repete a preparação somente se receber uma URL diferente. Cada preparação tem espera de até 12 segundos pelo áudio; a conexão de voz usa timeout de 10 segundos, com limite externo de 12 segundos. São limites por etapa, não garantia de tempo total. A duração de cada seleção concluída aparece no log.
-
-O buffer absorve oscilações curtas. Se a fila esvaziar, o bot envia silêncio até recompor o buffer, sem acelerar o áudio. Falhas persistentes da internet, da própria estação ou da conexão de voz ainda podem interromper a reprodução.
-
-Para investigar travadas, observe o log `Buffer esvaziou`. Para testar a CBN sem Discord durante 30 segundos, execute:
-
-```powershell
-.\.venv\Scripts\python.exe check_streams.py --station cbn --seconds 30 --realtime
-```
-
-Esse teste verifica o caminho rádio → FFmpeg → buffer, sem testar a transmissão UDP para o Discord. No teste de desenvolvimento, a CBN completou 30 segundos sem esvaziar o buffer. Os testes automatizados simulam falta e retomada de áudio, fim da fonte, parada e indisponibilidade do Radio Browser:
-
-```powershell
-.\.venv\Scripts\python.exe -m unittest test_playback test_tuning -v
-```
-
-Referências: [Radio Browser API](https://docs.radio-browser.info/) e [opções HTTP de reconexão do FFmpeg](https://ffmpeg.org/ffmpeg-protocols.html#http).
-
-Para repetir o diagnóstico técnico sem conectar ao Discord, execute `.\.venv\Scripts\python.exe check_streams.py`. Ele recebe dois segundos de cada stream, sem salvar o áudio.
-
-Para adicionar uma fonte que você tenha autorização de transmitir, use:
+Para cadastrar uma fonte cuja transmissão você tenha autorização de realizar, adicione um objeto à lista:
 
 ```json
 {
@@ -95,19 +118,54 @@ Para adicionar uma fonte que você tenha autorização de transmitir, use:
 }
 ```
 
-A URL deve apontar para áudio HTTP(S) compatível com FFmpeg, não para uma página com player. Reinicie o bot após editar. Somente administradores do ambiente devem editar esse arquivo; usuários do Discord não podem fornecer URLs arbitrárias.
+O campo `category` é uma descrição exibida no seletor, sem criar categorias no painel. A URL deve apontar para áudio HTTP(S) compatível com FFmpeg, não para uma página com player. Quando houver um registro no Radio Browser, o campo opcional `radio_browser_uuid` permite atualizar seu endereço.
 
-## Verificação manual
+Reinicie o bot após editar o catálogo. O menu suporta até 25 estações ativas. Somente quem administra a instalação deve editar esse arquivo; usuários do Discord não podem fornecer URLs arbitrárias pelo painel.
 
-Com um stream autorizado configurado, confira: escolher uma estação; trocar durante reprodução; usar Parar e selecionar novamente; desconectar; tentar controlar de outro canal; duas pessoas selecionarem ao mesmo tempo; sair e deixar o canal vazio; usar uma URL indisponível; executar em dois servidores.
+## Testes e diagnóstico
 
-O bot espera o primeiro buffer antes de confirmar “Tocando”. Streams indisponíveis exibem uma mensagem de erro; consulte `/tocando` e os logs para diagnosticar falhas posteriores. Ainda não há metadados da música, favoritos ou reinício automático do processo após queda definitiva do stream.
+Os testes locais cobrem buffer, troca de estação, cancelamento, retomada, falhas de consulta e limpeza dos comandos de teste. Não exigem token nem conexão ao Discord:
+
+```powershell
+.\.venv\Scripts\python.exe -m unittest test_playback test_tuning test_commands -v
+```
+
+Para verificar os streams do catálogo, recebendo uma pequena amostra sem gravar áudio:
+
+```powershell
+.\.venv\Scripts\python.exe check_streams.py
+```
+
+Para acompanhar a CBN durante 30 segundos em tempo real:
+
+```powershell
+.\.venv\Scripts\python.exe check_streams.py --station cbn --seconds 30 --realtime
+```
+
+Esse diagnóstico verifica o caminho **rádio → FFmpeg → buffer**. Não testa a transmissão de voz para o Discord. Em caso de travadas, observe mensagens como `Buffer esvaziou` e erros do FFmpeg no terminal. O log também registra o tempo de preparação de uma estação.
+
+No Discord, verifique a seleção e a troca de rádio, Parar/Retomar, Desconectar, a saída automática do canal vazio e a restrição de controle a membros no mesmo canal.
+
+## Limitações atuais
+
+- A retomada depende da última estação guardada na memória do processo.
+- Não há gravação da programação, busca por músicas, favoritos ou metadados da faixa atual.
+- O bot não reinicia o processo de áudio automaticamente após uma falha definitiva do stream; é necessário selecionar ou retomar a estação.
+- O tempo para começar depende da resposta do stream e da conexão de voz; os timeouts são limites por etapa, não uma garantia de tempo total.
+
+## Uso e direitos
+
+As transmissões, músicas, marcas e demais conteúdos pertencem às respectivas emissoras e titulares. O Howl não representa essas emissoras nem afirma possuir vínculo ou autorização delas.
+
+O projeto é pessoal, sem fins lucrativos, e a instalação do autor é usada em servidores privados. Essas condições, os créditos e a presença de um stream no Radio Browser **não substituem autorização de retransmissão**. As permissões não foram confirmadas para todo o catálogo. A [política da 98 FM Rio](https://98fmrio.com/direitos-autorais-conteudos-musicais-licenciados/) contém restrições ao uso da programação fora dos canais oficiais; também não foi confirmada uma licença de retransmissão da CNN International.
+
+Publicar este código e operar um serviço de retransmissão são atividades distintas. Para demonstrações de portfólio, podem ser usadas fontes próprias ou com licença que permita a transmissão pretendida.
+
+**Solicitações de remoção:** detentores de direitos podem entrar em contato pelo [repositório do Howl no GitHub](https://github.com/AlexanderRevoredo/Howl-Discord), identificando a estação, o conteúdo afetado e o motivo da solicitação.
 
 ## Referências
 
-O canal Radio Paradise · Rock foi localizado no Radio Browser e validado com cinco segundos de reprodução sem esvaziar o buffer. O canal é identificado como Rock Mix no diretório e RockIt! no site da emissora.
-
-Uma conta de bot conecta a apenas um canal de voz por servidor. Para reproduzir em duas calls do mesmo servidor ao mesmo tempo, são necessárias duas contas de bot distintas. O mesmo Howl pode atender servidores diferentes simultaneamente.
-
 - [discord.py: instalação](https://discordpy.readthedocs.io/en/stable/intro.html)
 - [discord.py: API de voz](https://discordpy.readthedocs.io/en/stable/api.html#voice)
+- [Radio Browser API](https://docs.radio-browser.info/)
+- [FFmpeg: protocolos e opções de reconexão](https://ffmpeg.org/ffmpeg-protocols.html#http)
